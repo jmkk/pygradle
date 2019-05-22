@@ -1,0 +1,39 @@
+trigger:
+- master
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+    - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  jdkVersion: '1.8'
+  jdkOptions: '-Xmx1024m -Xms256m'
+
+steps:
+- task: Gradle@2
+  displayName: "Get Dependencies"
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'downloadDependencies --console plain'
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: $(jdkVersion)
+    gradleOptions: $(jdkOptions)
+    sonarQubeRunAnalysis: false
+
+- task: Gradle@2
+  displayName: "Run Build"
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'build --console plain --max-workers=2'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: $(jdkVersion)
+    gradleOptions: $(jdkOptions)
+    sonarQubeRunAnalysis: false
