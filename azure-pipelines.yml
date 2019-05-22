@@ -30,4 +30,6 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    gradleOptions: '-Xmx1024m -Xms256m'
     sonarQubeRunAnalysis: false
