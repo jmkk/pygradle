@@ -12,6 +12,7 @@ pool:
 
 steps:
 - task: Gradle@2
+  displayName: "Get Dependencies"
   inputs:
     gradleWrapperFile: 'gradlew'
     tasks: 'downloadDependencies --console plain'
@@ -19,4 +20,14 @@ steps:
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.8'
     gradleOptions: '-Xmx1024m -Xms256m'
+    sonarQubeRunAnalysis: false
+
+- task: Gradle@2
+  displayName: "Run Build"
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'build --console plain --max-workers=2'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
     sonarQubeRunAnalysis: false
